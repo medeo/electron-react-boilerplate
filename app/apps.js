@@ -7,8 +7,8 @@ const apps = [{
   id: v4(),
   isFav: true,
 }, {
-  name: 'cotation',
-  uri: '/quotations',
+  name: 'scores',
+  uri: '/scores',
   isActive: true,
   id: v4(),
   isFav: true

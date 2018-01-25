@@ -189,6 +189,9 @@
     "webpack-merge": "^4.1.1"
   },
   "dependencies": {
+    "@medeo/components": "^2.0.0",
+    "@medeo/form": "^1.0.4",
+    "@medeo/utils": "^1.0.0",
     "devtron": "^1.4.0",
     "electron-debug": "^1.5.0",
     "font-awesome": "^4.7.0",
@@ -203,7 +206,8 @@
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "source-map-support": "^0.5.0",
-    "styled-components": "^3.0.2"
+    "styled-components": "^3.0.2",
+    "uuid": "^3.2.1"
   },
   "devEngines": {
     "node": ">=7.x",

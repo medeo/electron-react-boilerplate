@@ -1,19 +1,22 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';
 import { createHashHistory } from 'history';
 import { routerMiddleware, routerActions } from 'react-router-redux';
 import { createLogger } from 'redux-logger';
+import createSagaMiddleware from 'redux-saga';
 import rootReducer from '../reducers';
+import rootSaga from '../sagas';
 
 const history = createHashHistory();
 
 const configureStore = (initialState?: {}) => {
+
   // Redux Configuration
   const middleware = [];
   const enhancers = [];
 
-  // Thunk Middleware
-  middleware.push(thunk);
+  // saga Middleware
+  const sagaMiddleware = createSagaMiddleware();
+  middleware.push(sagaMiddleware);
 
   // Logging Middleware
   const logger = createLogger({
@@ -55,6 +58,8 @@ const configureStore = (initialState?: {}) => {
     module.hot.accept('../reducers', () =>
       store.replaceReducer(require('../reducers'))); // eslint-disable-line global-require
   }
+
+  sagaMiddleware.run(rootSaga);
 
   return store;
 };

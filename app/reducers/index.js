@@ -1,10 +1,14 @@
 // @flow
 import { combineReducers } from 'redux';
 import { routerReducer as router } from 'react-router-redux';
-import launchpad from '../LaunchPad/ducks';
+
+
+// Import ducks file like from features:
+//
+// import feature from '../Feature/ducks';
 
 const rootReducer = combineReducers({
-  launchpad,
+  // feature,
   router,
 });
 

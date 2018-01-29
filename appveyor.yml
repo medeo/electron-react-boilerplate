@@ -1,17 +1,13 @@
-os: unstable
+os: Visual Studio 2015
+
+platform: x64
 
 environment:
-  matrix:
-    - nodejs_version: 8
-    - nodejs_version: 7
+  nodejs_version: 8
 
 cache:
-  - "%LOCALAPPDATA%/Yarn"
   - node_modules -> package.json
   - app/node_modules -> app/package.json
-
-matrix:
-  fast_finish: true
 
 build: off
 
@@ -22,14 +18,14 @@ shallow_clone: true
 clone_depth: 1
 
 install:
-  - ps: Install-Product node $env:nodejs_version
+  - ps: Install-Product node $env:nodejs_version x64
   - set CI=true
-  - yarn
-  - cd app && yarn
+  - npm install -g npm@latest
+  - set PATH=%APPDATA%\npm;%PATH%
+  - ps: '"//registry.npmjs.org/:_authToken=$env:NPM_TOKEN`n" | out-file "$env:userprofile\.npmrc" -Encoding ASCII'
+  - npm whoami
+  - npm install
 
 test_script:
   - node --version
-  - yarn lint
-  - yarn package
-  - yarn test
-  - yarn test-e2e
+  - npm run package-win

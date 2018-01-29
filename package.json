@@ -1,6 +1,6 @@
 {
-  "name": "poc-medeo",
-  "productName": "poc-medeo",
+  "name": "electron-react-boilerplate",
+  "productName": "electron-react-boilerplate",
   "version": "1.0.0",
   "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
   "scripts": {
@@ -32,8 +32,8 @@
   },
   "browserslist": "electron 1.6",
   "build": {
-    "productName": "poc-medeo",
-    "appId": "io.medeo.poc-medeo",
+    "productName": "electron-react-boilerplate",
+    "appId": "io.medeo.electron-react-boilerplate",
     "files": [
       "dist/",
       "node_modules/",

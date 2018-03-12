@@ -14,6 +14,7 @@ cache:
 before_install:
   - brew update
   - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
+  - git config --global url."https://${GH_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
 
 install:
   - npm whoami

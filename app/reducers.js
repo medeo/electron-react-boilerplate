@@ -1,6 +1,5 @@
 // @flow
 import { combineReducers } from 'redux';
-import { routerReducer as router } from 'react-router-redux';
 
 
 // Import ducks file like from features:
@@ -9,7 +8,7 @@ import { routerReducer as router } from 'react-router-redux';
 
 const rootReducer = combineReducers({
   // feature,
-  router,
+  feature: (state = null) => state
 });
 
 export default rootReducer;

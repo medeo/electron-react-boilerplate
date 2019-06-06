@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { createHashHistory } from 'history';
-import { routerMiddleware, routerActions } from 'react-router-redux';
+import { routerMiddleware, routerActions } from 'connected-react-router';
 import { createLogger } from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
 import rootReducer from '../reducers';
@@ -41,9 +41,9 @@ const configureStore = (initialState?: {}) => {
   /* eslint-disable no-underscore-dangle */
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-      // Options: http://zalmoxisus.github.io/redux-devtools-extension/API/Arguments.html
-      actionCreators,
-    })
+        // Options: http://extension.remotedev.io/docs/API/Arguments.html
+        actionCreators
+      })
     : compose;
   /* eslint-enable no-underscore-dangle */
 
@@ -55,8 +55,11 @@ const configureStore = (initialState?: {}) => {
   const store = createStore(rootReducer, initialState, enhancer);
 
   if (module.hot) {
-    module.hot.accept('../reducers', () =>
-      store.replaceReducer(require('../reducers'))); // eslint-disable-line global-require
+    module.hot.accept(
+      '../reducers',
+      // eslint-disable-next-line global-require
+      () => store.replaceReducer(require('../reducers').default)
+    );
   }
 
   sagaMiddleware.run(rootSaga);

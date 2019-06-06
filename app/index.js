@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { render } from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
+import { AppContainer as ReactHotAppContainer } from 'react-hot-loader';
 import { configureStore, history } from './store/configureStore';
 import App from './App'
 const store = configureStore();
+
+const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
 
 render(
   <AppContainer>

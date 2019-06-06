@@ -7,11 +7,11 @@ import rootSaga from '../sagas';
 
 const history = createBrowserHistory();
 const sagaMiddleware = createSagaMiddleware();
-
 const enhancer = applyMiddleware(sagaMiddleware);
 
+
 function configureStore(initialState?: {}) {
-  const store = createStore(rootReducer, initialState, enhancer);
+  const store = createStore<*, {}, *>(rootReducer, initialState, enhancer);
   sagaMiddleware.run(rootSaga);
   return store;
 }

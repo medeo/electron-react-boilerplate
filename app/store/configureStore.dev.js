@@ -1,6 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { createHashHistory } from 'history';
-import { routerMiddleware, routerActions } from 'connected-react-router';
 import { createLogger } from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
 import rootReducer from '../reducers';
@@ -29,13 +28,9 @@ const configureStore = (initialState?: {}) => {
     middleware.push(logger);
   }
 
-  // Router Middleware
-  const router = routerMiddleware(history);
-  middleware.push(router);
 
   // Redux DevTools Configuration
   const actionCreators = {
-    ...routerActions,
   };
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose
   /* eslint-disable no-underscore-dangle */

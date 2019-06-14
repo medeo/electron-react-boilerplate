@@ -82,13 +82,15 @@ const HelloWorld = () => <div>
       return
     }
     characteristic.addEventListener('characteristicvaluechanged', async event =>  {
+
+      console.log(event.target)
       fora(event.target)
      // await characteristic.stopNotifications()
     })
     await characteristic.startNotifications()
-    console.log('starting write')
+  //  console.log('starting write')
     const command = appendChecksum([0x51, 0x28, 0, 0, 0, 0, 0xa3])
-    characteristic.writeValue(command)
+   // characteristic.writeValue(command)
   }
   }>démarrer
   </button>

@@ -56,14 +56,15 @@ class NoblePeripheralManager extends NobleIPCConnector {
                 }
 
                 nobleCharacteristic.on('data', (data) => {
+                  log(`notification received for ${nobleCharacteristicUUID} %o`,data)
                   this.sendToRenderer('data', nobleCharacteristic, data)
                 })
                /* nobleCharacteristic.once('notify', () => {
                   log(`notifications requested for ${wbCharacteristicUUID}...`)
                 })*/
-                log(`Requesting notifications for ${wbCharacteristicUUID}...`)
+                log(`Requesting notifications for ${nobleCharacteristicUUID}...`)
                 nobleCharacteristic.subscribe()
-                this.sendToRenderer('notified', nobleCharacteristic)
+                setTimeout(() =>this.sendToRenderer('notified', nobleCharacteristic), 500)
               })
 
               ipcMain.on('write', (event, deviceId, wbServiceUUID, wbCharacteristicUUID, value) => {
@@ -73,12 +74,12 @@ class NoblePeripheralManager extends NobleIPCConnector {
                 const nobleCharacteristicUUID = transformWebBluetoothUUIDtoNoble(wbCharacteristicUUID)
                 const nobleService = this.peripheral.services.find(s => s.uuid === nobleServiceUUID)
                 if (nobleService == null) {
-                  log(`${wbServiceUUID} service was not found, exiting notify handler...`)
+                  log(`${nobleServiceUUID} service was not found, exiting notify handler...`)
                   return
                 }
                 const nobleCharacteristic = nobleService.characteristics.find(c => c.uuid === nobleCharacteristicUUID)
                 if (nobleCharacteristic == null) {
-                  log(`${wbCharacteristicUUID} characteristic was not found, exiting notify handler...`)
+                  log(`${nobleCharacteristicUUID} characteristic was not found, exiting notify handler...`)
                   return
                 }
                 nobleCharacteristic.write(value, false)

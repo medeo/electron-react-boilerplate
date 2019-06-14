@@ -56,9 +56,6 @@ const fora = (characteristic) => {
      // sendTurnOff(characteristic: characteristic)
       return;
     default:
-      console.log(characteristic.value)
-      command = appendChecksum([0x51, 0x28, 0, 0, 0, 0, 0xa3])
-      characteristic.writeValue(command)
       return;
 }
 }
@@ -89,6 +86,9 @@ const HelloWorld = () => <div>
      // await characteristic.stopNotifications()
     })
     await characteristic.startNotifications()
+    console.log('starting write')
+    const command = appendChecksum([0x51, 0x28, 0, 0, 0, 0, 0xa3])
+    characteristic.writeValue(command)
   }
   }>démarrer
   </button>

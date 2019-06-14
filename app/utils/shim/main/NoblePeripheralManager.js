@@ -55,13 +55,15 @@ class NoblePeripheralManager extends NobleIPCConnector {
                   return
                 }
 
-                // nobleCharacteristic.on('data', notificationHandler.bind(this, nobleCharacteristic))
-                nobleCharacteristic.once('notify', () => {
-                  log(`notifications requested for ${wbCharacteristicUUID}...`)
-                  this.sendToRenderer('notified', nobleCharacteristic)
+                nobleCharacteristic.on('data', (data) => {
+                  this.sendToRenderer('data', nobleCharacteristic, data)
                 })
+               /* nobleCharacteristic.once('notify', () => {
+                  log(`notifications requested for ${wbCharacteristicUUID}...`)
+                })*/
                 log(`Requesting notifications for ${wbCharacteristicUUID}...`)
                 nobleCharacteristic.subscribe()
+                this.sendToRenderer('notified', nobleCharacteristic)
               })
 
               ipcMain.on('write', (event, deviceId, wbServiceUUID, wbCharacteristicUUID, value) => {

@@ -1,6 +1,6 @@
 import BluetoothRemoteGATTServer from './BluetoothRemoteGATTServer'
 import debug from "debug"
-const log = debug('noble:bluetooth-shim:BluetoothDevice')
+const log = debug('bluetooth:renderer:BluetoothDevice')
 
 export class BluetoothDevice {
   constructor(peripheral) {

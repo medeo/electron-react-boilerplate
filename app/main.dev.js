@@ -14,7 +14,8 @@ import { app, BrowserWindow } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-import bluetooth from './bluetooth'
+import bluetooth from './utils/noble'
+
 
 export default class AppUpdater {
   constructor() {

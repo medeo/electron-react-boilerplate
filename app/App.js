@@ -4,7 +4,7 @@ import { Router } from '@reach/router'
 import { Provider } from 'react-redux'
 import styled from 'styled-components'
 import debug from 'debug'
-import './utils/shim/bluetooth'
+import './utils/shim/renderer/bluetooth'
 
 const log = debug('noble:renderer')
 
@@ -16,10 +16,15 @@ color: red;
 
 
 
-//const SERVICES_UUIDS = ["1809", "1810", "181d", "000015231212efde1523785feabcd123"]
 const SERVICES_UUIDS = [0x1809, 0x1810, 0x181d, "00001523-1212-efde-1523-785feabcd123"]
-//const CHARACTERISTICS_UUIDS = ["2a1c", "2a35", "2a9d", "000015241212efde1523785feabcd123"]
 const CHARACTERISTICS_UUIDS = [0x2a1c, 0x2a35, 0x2a9d, "00001524-1212-efde-1523-785feabcd123"]
+const MAC_ADDRESSES = [
+  "c0:26:df:02:0b:0c",
+  "5c:31:3e:03:73:ea",
+  "b4:99:4c:5a:be:32"
+]
+
+
 const appendChecksum = (command) => {
   const checksum = command.reduce((elem, acc)=> (elem + acc) & 0xff)
   return new Uint8Array([...command, checksum])
@@ -28,7 +33,6 @@ const fora = (characteristic) => {
   const value = new Uint8Array(characteristic.value.buffer);
   const ack = value[1]
   window.characteristic = characteristic
-  console.log(ack)
   let command
   switch(ack){
     case 0x2B: //READ_STORAGE_NUMBER_OF_DATA
@@ -38,10 +42,11 @@ const fora = (characteristic) => {
       characteristic.writeValue(command)
       return;
     case 0x26: //READ_STORAGE_DATA
-    console.log('read_storage_data', value)
+      console.log('read_storage_data', value)
+      command = appendChecksum([0x51, 0x50, 0, 0, 0, 0, 0xa3])
+      characteristic.writeValue(command)
     return
     case 0x28: // SERIAL
-      console.log('serial')
       command = appendChecksum([0x51, 0x2B, 0, 0, 0, 0, 0xa3])
       characteristic.writeValue(command)
       return;
@@ -61,24 +66,31 @@ const fora = (characteristic) => {
 const HelloWorld = () => <div>
   <button onClick={async () => {
     const device = await navigator.bluetooth.requestDevice({
-      filters: [{services:['1809']}]
+      filters: [{services:SERVICES_UUIDS}, {namePrefix: "DIAMOND MOBILE"}, {namePrefix: "A&D"}]
     })
     await device.gatt.connect()
     const services = await device.gatt.getPrimaryServices()
-    console.log(services)
-    const service = services.find(s => SERVICES_UUIDS.includes(s.uuid))
-    if (service == null) return
+    const service = services.find(s => {
+      return SERVICES_UUIDS.includes(s.uuid)
+    })
+    if (service == null) {
+      console.log("could not find service")
+      return
+    }
     const characteristics = await service.getCharacteristics()
-    console.log(characteristics)
+
     const characteristic = characteristics.find(c => CHARACTERISTICS_UUIDS.includes(c.uuid))
+    if(characteristic == null) {
+      console.log('could not find characteristic')
+      return
+    }
     characteristic.addEventListener('characteristicvaluechanged', async event =>  {
       fora(event.target)
-
      // await characteristic.stopNotifications()
     })
     await characteristic.startNotifications()
   }
-  }>demarrer
+  }>démarrer
   </button>
 </div>
 

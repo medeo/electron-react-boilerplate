@@ -1,16 +1,21 @@
 import { ipcRenderer } from 'electron'
 import BluetoothDevice from './BluetoothDevice'
 import debug from 'debug'
+import { regex }from '../uuid'
+const log = debug('bluetooth:renderer')
 
-const log = debug('noble:bluetooth-shim:bluetooth')
 
 
-const uuidRegex = new RegExp(/[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/g)
+/**
+ * used to mimic the default navigator error when passing incorrect services...
+ * @param rawValue
+ */
+const assertServiceUUID = (rawValue) => {
 
-const assertParametersAreUUID = (rawValue) => {
-  if (typeof rawValue === 'string' && uuidRegex.test(rawValue) === false || typeof rawValue !== 'number') {
+  if ((typeof rawValue === 'string' && regex.test(rawValue) === true)|| typeof rawValue === 'number')
+    return
+
     throw new Error(`${rawValue} is not a valid UUID... It must be a valid UUID alias (e.g. 0x1234), UUID (lowercase hex characters e.g. '00001234-0000-1000-8000-00805f9b34fb')`)
-  }
 }
 
 
@@ -25,29 +30,24 @@ const assertParametersAreUUID = (rawValue) => {
  * @returns {Promise<*>}
  */
 //TODO: investigate why advertised services are not showing when using the dongle
-const requestDevice = async (options) => new Promise((resolve) => {
+const requestDevice = async (options) => new Promise((resolve, reject) => {
   log(`requestDevice has been called with: `, options)
-  if (options.filters != null) {
-    const filter = options.filters.find(f => f.services != null)
-    if(filter != null && Array.isArray(filter.services)) {
-      log(filter)
-      filter.services.map(s => assertParametersAreUUID(s))
-      console.warn('using advertised services as a filter is not supported with the bled dongle')
-    }
-  }
   log(`requesting scan...`)
+  ipcRenderer.removeAllListeners('noble')
   ipcRenderer.send('startScan', options)
   const listener = (e, ...nobleArgs) => {
     const eventName = nobleArgs.shift()
     if (eventName === 'discover') {
       const peripheral = nobleArgs.shift()
-      const device = new BluetoothDevice(peripheral)
-      log(`${device.name || device.id} successfully scanned`)
-      ipcRenderer.removeListener('noble', listener)
-      return resolve(device)
+        const device = new BluetoothDevice(peripheral)
+        log(`${device.name || device.id} successfully scanned`)
+        ipcRenderer.removeListener('noble', listener)
+        return resolve(device)
     }
   }
   ipcRenderer.on('noble', listener)
 })
 
 navigator.bluetooth.requestDevice = requestDevice
+
+

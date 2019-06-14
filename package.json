@@ -216,7 +216,7 @@
   "dependencies": {
     "@abandonware/noble": "^1.9.2-2",
     "@fortawesome/fontawesome-free": "^5.8.1",
-    "@medeo/bled-bindings": "0.0.7",
+    "@medeo/bled-bindings": "0.1.1",
     "@medeo/components": "^2.0.0",
     "@medeo/form": "^1.0.4",
     "@medeo/utils": "^1.0.0",
@@ -226,6 +226,7 @@
     "devtron": "^1.4.0",
     "electron-debug": "^2.1.0",
     "electron-log": "^3.0.4",
+    "electron-store": "^3.3.0",
     "electron-updater": "^4.0.6",
     "history": "^4.9.0",
     "polished": "^3.4.0",

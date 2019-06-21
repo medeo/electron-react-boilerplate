@@ -221,6 +221,7 @@
     "@medeo/form": "^1.0.4",
     "@medeo/utils": "^1.0.0",
     "@reach/router": "^1.2.1",
+    "babel-plugin-macros": "^2.6.1",
     "bglib": "^0.0.9",
     "core-js": "2",
     "devtron": "^1.4.0",

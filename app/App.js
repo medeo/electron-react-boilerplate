@@ -83,14 +83,17 @@ const HelloWorld = () => <div>
     }
     characteristic.addEventListener('characteristicvaluechanged', async event =>  {
 
-      console.log(event.target)
       fora(event.target)
+      console.log(event.target)
      // await characteristic.stopNotifications()
     })
     await characteristic.startNotifications()
-  //  console.log('starting write')
+    if( characteristic.uuid === "00001524-1212-efde-1523-785feabcd123" ) {
     const command = appendChecksum([0x51, 0x28, 0, 0, 0, 0, 0xa3])
-   // characteristic.writeValue(command)
+   characteristic.writeValue(command)
+   console.log('starting write')
+
+    }
   }
   }>démarrer
   </button>

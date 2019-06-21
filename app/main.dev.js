@@ -10,7 +10,7 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, electron } from 'electron'
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -79,6 +79,18 @@ app.on('ready', async () => {
 
   mainWindow.openDevTools();
   mainWindow.loadURL(`file://${__dirname}/app.html`);
+
+  /*
+   * This hack is used to prevent 403 when POSTing or PUTing data using fetch
+   * the Origin is change from null to electron://app
+   */
+  electron.session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    if (details.requestHeaders.Origin === 'null') {
+      // eslint-disable-next-line no-param-reassign
+      details.requestHeaders.Origin = 'electron://app'
+    }
+    callback({ cancel: false, requestHeaders: details.requestHeaders })
+  })
 
 
   bluetooth(mainWindow);
